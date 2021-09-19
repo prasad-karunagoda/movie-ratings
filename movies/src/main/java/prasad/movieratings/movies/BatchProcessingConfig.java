@@ -1,11 +1,14 @@
 package prasad.movieratings.movies;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
@@ -22,6 +25,8 @@ import javax.sql.DataSource;
 @Configuration
 @EnableBatchProcessing
 public class BatchProcessingConfig {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BatchProcessingConfig.class);
 
     private static final String[] FIELDS = new String[] {"imdbTitleId", "title", "originalTitle", "year",
             "datePublished", "genre", "duration", "country", "language", "director", "writer", "productionCompany",
@@ -48,6 +53,11 @@ public class BatchProcessingConfig {
 
         flatFileItemReader.setLinesToSkip(1);
         return flatFileItemReader;
+    }
+
+    @Bean
+    public ItemProcessor<Movie, Movie> processor() {
+        return movie -> movie;
     }
 
     @Bean
