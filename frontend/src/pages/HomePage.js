@@ -3,7 +3,7 @@ import {MovieCard} from "../components/MovieCard";
 
 export const HomePage = () => {
 
-    const [recentMovies, setRecentMovies] = useState({});
+    const [recentMovies, setRecentMovies] = useState();
 
     useEffect(() => {
         const fetchMovies = async () => {
@@ -13,6 +13,8 @@ export const HomePage = () => {
         };
         fetchMovies();
     }, []);
+
+    if (!recentMovies) return null;
 
     return (
         <div className="HomePage">
